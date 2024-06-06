@@ -12,7 +12,7 @@
         <input type="number" id="scale" name="scale" step="0.1" required><br><br>
         <label for="file">Upload Image:</label>
         <input type="file" id="file" name="file" accept="image/png, image/jpeg" required><br><br>
-        <div class="g-recaptcha" data-sitekey="6LfZ2PIpAAAAALUygJ3io2ELq-tHZnPx9Pt8NN7O"></div>
+        <div class="g-recaptcha" data-sitekey="6LfS1PIpAAAAALhxE75l96slBVpBRVyyCBpuhMRs"></div>
         <input type="hidden" id="recaptcha_token" name="recaptcha_token">
         <button type="button" onclick="onSubmit()">Resize</button>
     </form>
@@ -20,9 +20,9 @@
     <script>
         function onSubmit() {
             grecaptcha.ready(function() {
-                grecaptcha.execute('6LfZ2PIpAAAAALUygJ3io2ELq-tHZnPx9Pt8NN7O', {action: 'submit'}).then(function(token) {
+                grecaptcha.execute('6LfS1PIpAAAAALhxE75l96slBVpBRVyyCBpuhMRs', {action: 'submit'}).then(function(token) {
                     document.getElementById('recaptcha_token').value = token;
-                    document.getElementById('resize-form').submit();  // Submit the form after setting the token
+                    document.getElementById('resize-form').submit();
                 });
             });
         }

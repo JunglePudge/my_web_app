@@ -23,7 +23,7 @@ app.mount("/static", StaticFiles(directory=static_path), name="static")
 templates_path = os.path.join(os.path.dirname(__file__), "templates")
 
 # Add your reCAPTCHA Secret Key here
-RECAPTCHA_SECRET_KEY = '6LfZ2PIpAAAAAI1IuYZikMfrikYpyXjCEx6q-sRt'
+RECAPTCHA_SECRET_KEY = '6LfS1PIpAAAAAIafqCUXQt_mKH5LLOgGMwEKRtkN'
 
 @app.get("/", response_class=HTMLResponse)
 async def get_form():
@@ -41,7 +41,7 @@ def verify_recaptcha(token: str):
     }
     response = requests.post(url, data=data)
     result = response.json()
-    logging.info(f"reCAPTCHA verification result: {result}")  # Add logging for debugging
+    logging.debug(f"reCAPTCHA verification result: {result}")
     return result.get('success', False)
 
 @app.post("/resize", response_class=HTMLResponse)
@@ -69,14 +69,14 @@ async def resize_image(request: Request, scale: float = Form(...), file: UploadF
 
         # Original image color distribution
         original_array = np.array(image)
-        original_array = original_array.reshape(-1, 3)  # Reshape to (-1, 3) to preserve RGB structure
+        original_array = original_array.reshape(-1, 3)
         original_colors, original_counts = np.unique(original_array, axis=0, return_counts=True)
         ax[0].bar(range(len(original_colors)), original_counts, color=original_colors / 255.0)
         ax[0].set_title("Original Image Color Distribution")
 
         # Resized image color distribution
         resized_array = np.array(resized_image)
-        resized_array = resized_array.reshape(-1, 3)  # Reshape to (-1, 3) to preserve RGB structure
+        resized_array = resized_array.reshape(-1, 3)
         resized_colors, resized_counts = np.unique(resized_array, axis=0, return_counts=True)
         ax[1].bar(range(len(resized_colors)), resized_counts, color=resized_colors / 255.0)
         ax[1].set_title("Resized Image Color Distribution")
@@ -101,15 +101,14 @@ async def resize_image(request: Request, scale: float = Form(...), file: UploadF
 if __name__ == "__main__":
     import uvicorn
     import sys
-    import logging
 
-    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
     logger = logging.getLogger(__name__)
 
     logger.info("Starting server...")
 
     try:
-        uvicorn.run(app, host="0.0.0.0", port=8000)
+        uvicorn.run(app, host="127.0.0.1", port=8000)
     except Exception as e:
         logger.error(f"Server failed to start: {e}")
         sys.exit(1)
