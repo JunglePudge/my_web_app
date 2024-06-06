@@ -9,6 +9,7 @@ uvicorn = "*"
 pillow = "*"
 matplotlib = "*"
 pytest = "*"
+requests = "*"
 
 [dev-packages]
 
