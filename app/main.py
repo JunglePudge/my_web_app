@@ -48,13 +48,15 @@ async def resize_image(scale: float = Form(...), file: UploadFile = File(...)):
 
         # Original image color distribution
         original_array = np.array(image)
-        original_colors, original_counts = np.unique(original_array.reshape(-1, 3), axis=0, return_counts=True)
+        original_array = original_array.reshape(-1, 3)  # Reshape to (-1, 3) to preserve RGB structure
+        original_colors, original_counts = np.unique(original_array, axis=0, return_counts=True)
         ax[0].bar(range(len(original_colors)), original_counts, color=original_colors / 255.0)
         ax[0].set_title("Original Image Color Distribution")
 
         # Resized image color distribution
         resized_array = np.array(resized_image)
-        resized_colors, resized_counts = np.unique(resized_array.reshape(-1, 3), axis=0, return_counts=True)
+        resized_array = resized_array.reshape(-1, 3)  # Reshape to (-1, 3) to preserve RGB structure
+        resized_colors, resized_counts = np.unique(resized_array, axis=0, return_counts=True)
         ax[1].bar(range(len(resized_colors)), resized_counts, color=resized_colors / 255.0)
         ax[1].set_title("Resized Image Color Distribution")
 
