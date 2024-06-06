@@ -8,6 +8,7 @@ import io
 import os
 import requests
 import base64
+import logging
 
 app = FastAPI()
 
@@ -40,6 +41,7 @@ def verify_recaptcha(token: str):
     }
     response = requests.post(url, data=data)
     result = response.json()
+    logging.info(f"reCAPTCHA verification result: {result}")  # Add logging for debugging
     return result.get('success', False)
 
 @app.post("/resize", response_class=HTMLResponse)
