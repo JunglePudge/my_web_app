@@ -41,12 +41,14 @@ def verify_recaptcha(token: str):
     }
     response = requests.post(url, data=data)
     result = response.json()
-    logging.debug(f"reCAPTCHA verification result: {result}")
+    logging.debug(f"reCAPTCHA verification result: {result}")  # Add logging for debugging
     return result.get('success', False)
 
 @app.post("/resize", response_class=HTMLResponse)
 async def resize_image(request: Request, scale: float = Form(...), file: UploadFile = File(...), recaptcha_token: str = Form(...)):
+    logging.debug(f"Received recaptcha_token: {recaptcha_token}")  # Log for debugging
     if not verify_recaptcha(recaptcha_token):
+        logging.error("reCAPTCHA verification failed")  # Log for debugging
         raise HTTPException(status_code=400, detail="reCAPTCHA verification failed")
 
     try:
@@ -96,6 +98,7 @@ async def resize_image(request: Request, scale: float = Form(...), file: UploadF
 
         return HTMLResponse(content=result_html.format(image_data=image_data_base64, plot_data=plot_data_base64))
     except Exception as e:
+        logging.error(f"Error processing image: {e}")  # Log for debugging
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
