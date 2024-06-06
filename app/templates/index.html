@@ -4,43 +4,27 @@
     <title>Image Resizer</title>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('resize-form').addEventListener('submit', function(event) {
-            event.preventDefault();  // Предотвращаем стандартную отправку формы
-
-            var form = event.target;
-            var formData = new FormData(form);
-
-            fetch('/resize', {
-                method: 'POST',
-                body: formData
-            })
-            .then(function(response) {
-                return response.text();
-            })
-            .then(function(html) {
-                // Заменяем содержимое body на полученный HTML-ответ
-                document.querySelector('body').innerHTML = html;
-            })
-            .catch(function(error) {
-                console.error('Error:', error);
-            });
-        });
-    });
-</script>
-
 </head>
 <body>
     <h1>Image Resizer</h1>
-    <form id="resize-form" action="/resize" method="post" enctype="multipart/form-data">
+    <form action="/resize" method="post" enctype="multipart/form-data">
         <label for="scale">Scale:</label>
         <input type="number" id="scale" name="scale" step="0.1" required><br><br>
         <label for="file">Upload Image:</label>
         <input type="file" id="file" name="file" accept="image/png, image/jpeg" required><br><br>
         <div class="g-recaptcha" data-sitekey="6LfS1PIpAAAAALhxE75l96slBVpBRVyyCBpuhMRs"></div>
         <input type="hidden" id="recaptcha_token" name="recaptcha_token">
-        <button type="button" onclick="onSubmit(event)">Resize</button>
+        <button type="submit" onclick="onSubmit()">Resize</button>
     </form>
+
+    <script>
+        function onSubmit() {
+            grecaptcha.ready(function() {
+                grecaptcha.execute('your_site_key', {action: 'submit'}).then(function(token) {
+                    document.getElementById('6LfS1PIpAAAAALhxE75l96slBVpBRVyyCBpuhMRs').value = token;
+                });
+            });
+        }
+    </script>
 </body>
 </html>
