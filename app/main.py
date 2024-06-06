@@ -42,6 +42,7 @@ async def resize_image(scale: float = Form(...), file: UploadFile = File(...)):
         buf = io.BytesIO()
         resized_image.save(buf, format="PNG")
         buf.seek(0)
+        image_data = buf.getvalue()
 
         # Generate color distribution graphs
         fig, ax = plt.subplots(1, 2, figsize=(12, 6))
@@ -64,11 +65,16 @@ async def resize_image(scale: float = Form(...), file: UploadFile = File(...)):
         plot_buf = io.BytesIO()
         plt.savefig(plot_buf, format="png")
         plot_buf.seek(0)
+        plot_data = plot_buf.getvalue()
 
         with open(os.path.join(templates_path, "result.html")) as f:
             result_html = f.read()
 
-        return HTMLResponse(content=result_html.format(image_data=buf.getvalue().hex(), plot_data=plot_buf.getvalue().hex()))
+        # Convert image and plot data to hex
+        image_data_hex = image_data.hex()
+        plot_data_hex = plot_data.hex()
+
+        return HTMLResponse(content=result_html.format(image_data=image_data_hex, plot_data=plot_data_hex))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
