@@ -6,6 +6,7 @@ from PIL import Image
 import numpy as np
 import io
 import os
+import base64
 
 app = FastAPI()
 
@@ -70,11 +71,11 @@ async def resize_image(scale: float = Form(...), file: UploadFile = File(...)):
         with open(os.path.join(templates_path, "result.html")) as f:
             result_html = f.read()
 
-        # Convert image and plot data to hex
-        image_data_hex = image_data.hex()
-        plot_data_hex = plot_data.hex()
+        # Convert image and plot data to base64
+        image_data_base64 = base64.b64encode(image_data).decode('utf-8')
+        plot_data_base64 = base64.b64encode(plot_data).decode('utf-8')
 
-        return HTMLResponse(content=result_html.format(image_data=image_data_hex, plot_data=plot_data_hex))
+        return HTMLResponse(content=result_html.format(image_data=image_data_base64, plot_data=plot_data_base64))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
