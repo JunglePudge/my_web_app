@@ -5,21 +5,31 @@
     <link rel="stylesheet" type="text/css" href="/static/style.css">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
-        function onSubmit() {
-            console.log("onSubmit function called");  // Log for debugging
-            grecaptcha.ready(function() {
-                console.log("reCAPTCHA ready");  // Log for debugging
-                grecaptcha.execute('6LfS1PIpAAAAALhxE75l96slBVpBRVyyCBpuhMRs', {action: 'submit'}).then(function(token) {
-                    console.log("Token generated: ", token);  // Log for debugging
-                    document.getElementById('recaptcha_token').value = token;
-                    console.log("Form submitted");  // Log for debugging
-                    document.getElementById('resize-form').submit();  // Submit the form after setting the token
-                }).catch(function(error) {
-                    console.error("Error generating reCAPTCHA token:", error);  // Log for debugging
-                });
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('resize-form').addEventListener('submit', function(event) {
+            event.preventDefault();  // Предотвращаем стандартную отправку формы
+
+            var form = event.target;
+            var formData = new FormData(form);
+
+            fetch('/resize', {
+                method: 'POST',
+                body: formData
+            })
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(html) {
+                // Заменяем содержимое body на полученный HTML-ответ
+                document.querySelector('body').innerHTML = html;
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
             });
-        }
-    </script>
+        });
+    });
+</script>
+
 </head>
 <body>
     <h1>Image Resizer</h1>
@@ -30,7 +40,7 @@
         <input type="file" id="file" name="file" accept="image/png, image/jpeg" required><br><br>
         <div class="g-recaptcha" data-sitekey="6LfS1PIpAAAAALhxE75l96slBVpBRVyyCBpuhMRs"></div>
         <input type="hidden" id="recaptcha_token" name="recaptcha_token">
-        <button type="button" onclick="onSubmit()">Resize</button>
+        <button type="button" onclick="onSubmit(event)">Resize</button>
     </form>
 </body>
 </html>

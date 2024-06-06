@@ -44,6 +44,7 @@ def verify_recaptcha(token: str):
     logging.debug(f"reCAPTCHA verification result: {result}")  # Add logging for debugging
     return result.get('success', False)
 
+
 @app.post("/resize", response_class=HTMLResponse)
 async def resize_image(request: Request, scale: float = Form(...), file: UploadFile = File(...), recaptcha_token: str = Form(...)):
     logging.debug(f"Received recaptcha_token: {recaptcha_token}")  # Log for debugging
@@ -105,6 +106,7 @@ async def resize_image(request: Request, scale: float = Form(...), file: UploadF
     except Exception as e:
         logging.error(f"Error processing image: {e}")  # Log for debugging
         raise HTTPException(status_code=500, detail=str(e))
+
 
 if __name__ == "__main__":
     import uvicorn
