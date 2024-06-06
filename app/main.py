@@ -72,4 +72,16 @@ async def resize_image(scale: float = Form(...), file: UploadFile = File(...)):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.runp(app, host="0.0.0.0", port=8000)
+    import sys
+    import logging
+
+    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+    logger = logging.getLogger(__name__)
+
+    logger.info("Starting server...")
+
+    try:
+        uvicorn.run(app, host="0.0.0.0", port=8000)
+    except Exception as e:
+        logger.error(f"Server failed to start: {e}")
+        sys.exit(1)
