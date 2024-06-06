@@ -20,7 +20,7 @@
     <script>
         function onSubmit() {
             grecaptcha.ready(function() {
-                grecaptcha.execute('6LfS1PIpAAAAALhxE75l96slBVpBRVyyCBpuhMRs', {action: 'submit'}).then(function(token) {
+                grecaptcha.execute('6LfZ2PIpAAAAALUygJ3io2ELq-tHZnPx9Pt8NN7O', {action: 'submit'}).then(function(token) {
                     document.getElementById('recaptcha_token').value = token;
                     document.getElementById('resize-form').submit();  // Submit the form after setting the token
                 });

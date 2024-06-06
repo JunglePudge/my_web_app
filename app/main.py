@@ -23,7 +23,7 @@ app.mount("/static", StaticFiles(directory=static_path), name="static")
 templates_path = os.path.join(os.path.dirname(__file__), "templates")
 
 # Add your reCAPTCHA Secret Key here
-RECAPTCHA_SECRET_KEY = '6LfS1PIpAAAAAIafqCUXQt_mKH5LLOgGMwEKRtkN'
+RECAPTCHA_SECRET_KEY = '6LfZ2PIpAAAAAI1IuYZikMfrikYpyXjCEx6q-sRt'
 
 @app.get("/", response_class=HTMLResponse)
 async def get_form():
