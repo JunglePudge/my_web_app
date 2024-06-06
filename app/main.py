@@ -51,14 +51,19 @@ async def resize_image(request: Request, scale: float = Form(...), file: UploadF
         logging.error("reCAPTCHA verification failed")  # Log for debugging
         raise HTTPException(status_code=400, detail="reCAPTCHA verification failed")
 
+    logging.debug(f"Received scale: {scale}")  # Log for debugging
+    logging.debug(f"Received file: {file.filename}")  # Log for debugging
+
     try:
         # Read image
         image = Image.open(io.BytesIO(await file.read()))
+        logging.debug("Image opened successfully")  # Log for debugging
 
         # Resize image
         width, height = image.size
         new_size = (int(width * scale), int(height * scale))
         resized_image = image.resize(new_size)
+        logging.debug("Image resized successfully")  # Log for debugging
 
         # Save resized image to a buffer
         buf = io.BytesIO()

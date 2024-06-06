@@ -12,6 +12,7 @@
                 grecaptcha.execute('6LfS1PIpAAAAALhxE75l96slBVpBRVyyCBpuhMRs', {action: 'submit'}).then(function(token) {
                     console.log("Token generated: ", token);  // Log for debugging
                     document.getElementById('recaptcha_token').value = token;
+                    console.log("Form submitted");  // Log for debugging
                     document.getElementById('resize-form').submit();  // Submit the form after setting the token
                 }).catch(function(error) {
                     console.error("Error generating reCAPTCHA token:", error);  // Log for debugging
