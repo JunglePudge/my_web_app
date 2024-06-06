@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resized Image Result</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <h1>Resized Image Result</h1>
+    <fieldset>
+        <legend>Original and Resized Image</legend>
+        <img src="data:image/png;base64,{{ image_data }}">
+    </fieldset>
+    <fieldset>
+        <legend>Color Distribution Graphs</legend>
+        <img src="data:image/png;base64,{{ plot_data }}">
+    </fieldset>
+</body>
+</html>
