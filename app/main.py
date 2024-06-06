@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Form, UploadFile, File, HTTPException
+from fastapi import FastAPI, Form, UploadFile, File, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 import matplotlib.pyplot as plt
@@ -6,6 +6,7 @@ from PIL import Image
 import numpy as np
 import io
 import os
+import requests
 import base64
 
 app = FastAPI()
@@ -20,6 +21,9 @@ app.mount("/static", StaticFiles(directory=static_path), name="static")
 # Define the path to the templates directory
 templates_path = os.path.join(os.path.dirname(__file__), "templates")
 
+# Add your reCAPTCHA Secret Key here
+RECAPTCHA_SECRET_KEY = '6LfS1PIpAAAAAIafqCUXQt_mKH5LLOgGMwEKRtkN'
+
 @app.get("/", response_class=HTMLResponse)
 async def get_form():
     try:
@@ -28,8 +32,21 @@ async def get_form():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+def verify_recaptcha(token: str):
+    url = "https://www.google.com/recaptcha/api/siteverify"
+    data = {
+        'secret': RECAPTCHA_SECRET_KEY,
+        'response': token
+    }
+    response = requests.post(url, data=data)
+    result = response.json()
+    return result.get('success', False)
+
 @app.post("/resize", response_class=HTMLResponse)
-async def resize_image(scale: float = Form(...), file: UploadFile = File(...)):
+async def resize_image(request: Request, scale: float = Form(...), file: UploadFile = File(...), recaptcha_token: str = Form(...)):
+    if not verify_recaptcha(recaptcha_token):
+        raise HTTPException(status_code=400, detail="reCAPTCHA verification failed")
+
     try:
         # Read image
         image = Image.open(io.BytesIO(await file.read()))

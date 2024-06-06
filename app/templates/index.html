@@ -13,7 +13,18 @@
         <label for="file">Upload Image:</label>
         <input type="file" id="file" name="file" accept="image/png, image/jpeg" required><br><br>
         <div class="g-recaptcha" data-sitekey="your_site_key"></div>
-        <button type="submit">Resize</button>
+        <input type="hidden" id="recaptcha_token" name="recaptcha_token">
+        <button type="submit" onclick="onSubmit()">Resize</button>
     </form>
+
+    <script>
+        function onSubmit() {
+            grecaptcha.ready(function() {
+                grecaptcha.execute('6LfS1PIpAAAAALhxE75l96slBVpBRVyyCBpuhMRs', {action: 'submit'}).then(function(token) {
+                    document.getElementById('recaptcha_token').value = token;
+                });
+            });
+        }
+    </script>
 </body>
 </html>
