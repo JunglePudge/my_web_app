@@ -16,10 +16,13 @@ if not os.path.isdir(static_path):
 
 app.mount("/static", StaticFiles(directory=static_path), name="static")
 
+# Define the path to the templates directory
+templates_path = os.path.join(os.path.dirname(__file__), "templates")
+
 @app.get("/", response_class=HTMLResponse)
 async def get_form():
     try:
-        with open("app/templates/index.html") as f:
+        with open(os.path.join(templates_path, "index.html")) as f:
             return HTMLResponse(content=f.read())
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -60,7 +63,7 @@ async def resize_image(scale: float = Form(...), file: UploadFile = File(...)):
         plt.savefig(plot_buf, format="png")
         plot_buf.seek(0)
 
-        with open("app/templates/result.html") as f:
+        with open(os.path.join(templates_path, "result.html")) as f:
             result_html = f.read()
 
         return HTMLResponse(content=result_html.format(image_data=buf.getvalue().hex(), plot_data=plot_buf.getvalue().hex()))
